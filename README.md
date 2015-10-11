@@ -1,3 +1,7 @@
+#	fusionar hapax que aparezcan ~siempre juntos
+#	juntar skipgrams que aparezcan ~siempre juntos
+#	ir juntando órdenes menores
+
 
 
 #	Script arguments
@@ -10,7 +14,8 @@ TMP = Temporary file for storing the postprocessed data.
 #	Model parameters
 N = Maximum order of n-grams to be computed for multiword extraction. By the definition of multiwords, the minimum order is hard-coded to 2.
 
-F = Minimum frequency for a multiword.
+F = Minimum frequency for a multiword
+Top F word n-grams most activated by their character n-grams that will be pooled for rewriting.
 
 MAX_K = 100
 
