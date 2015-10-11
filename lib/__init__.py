@@ -6,5 +6,6 @@ from tools import (
     unigram_frequencies,
     apply,
     restore,
-    clean_up
+    clean_up,
+    persist
 )
