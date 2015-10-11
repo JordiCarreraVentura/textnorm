@@ -1,42 +1,74 @@
+import math
 import os
 import sys
 import re
 from collections import (
-    defaultdict,
+    defaultdict as deft,
     Counter
 )
 
 from Streamer import Streamer
 
 
+class FrequencyBand:
+    def __init__(self, freqDist):
+        self.bands = deft(set)
+        for word, freq in freqDist.items():
+            self.bands[freq].add(word)
+        for i, band in enumerate(sorted(self.bands.keys(), reverse=True)):
+            words = self.bands[band]
+            if i >= band:
+                self.k = i
+                self.f = band
+                break
+        
+    def max_k(self):
+        return self.k
+    
+    def max_f(self):
+        return self.f
+        
+    def min_f(self):
+        lens = sorted([(len(words), band) for band, words in self.bands.items()])
+        maxim = lens[-1][0]
+        return int(round(math.log(maxim, 10)))
+
+
 def unigram_frequencies(preprocessor, WORK, MAX_K, MAX_F, _n):
+
     freqDist = Counter()
     print 'Collecting unigram frequencies...'
     for line in Streamer(WORK, n=_n):
         freqDist.update(set(preprocessor(line).split()))
+
+    freqBand = FrequencyBand(freqDist)
+
     print 'Determining frequency thresholds...'
     if isinstance(MAX_F, float):
         maxfreq = int(_n * MAX_F)
-    else:
+    elif isinstance(MAX_F, int):
         maxfreq = MAX_F
-    unigram_f = defaultdict(bool)
-    freqDist = freqDist.most_common()
-    for i, (w, f) in enumerate(freqDist):
+    else:
+        maxfreq = freqBand.max_f()
 
-        if i < MAX_K:				#	the system ignore the top k
-            continue				#	most frequent words.
-
-        if f < maxfreq:				# the system stores a True value for all
-            unigram_f[w] = True		# words below the maximum frequency (these
-            						# words constitute relevant, informative
-            						# content.
+    unigram_f = deft(bool)
+    most_freq = freqDist.most_common()
+    for i, (w, f) in enumerate(most_freq):
+        #    the system ignore the top k
+        #    most frequent words.
+        if ((MAX_K != 'auto' and i < MAX_K) or		
+            (MAX_K == 'auto' and i < freqBand.max_k())):
+            continue
+        if f < maxfreq:                 #    the system stores a True value for all
+            unigram_f[w] = True         #    words below the maximum frequency (these
+                                   	    #    words constitute relevant, informative
+                                        #    content.
     print 'Done!'
     print 'maxfreq=%d' % maxfreq
     print '%d words below maxfreq' % (
         len([w for w, boolean in unigram_f.items() if boolean])
     )
-    return unigram_f
-
+    return unigram_f, freqBand
 
 
 def apply(multiwords, line):
@@ -76,7 +108,14 @@ def restore(CORPUS, TMP, OUT):
     txt = ''.join(newlines)
     with open(OUT, 'wb') as wrt:
         wrt.write(txt)
-    
+
+
+def persist(TMP, parser):
+    with open(TMP, 'wb') as wrt:
+        for line in parser:
+            wrt.write('%s\n' % line)
+    return TMP
+
             
 def clean_up(TMP):
     rm = 'rm %s' % TMP
