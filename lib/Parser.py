@@ -7,15 +7,18 @@ from collections import (
 )
 
 class Parser:
-    def __init__(self, n, f, min_f, content=defaultdict(bool)):
+    def __init__(self, n, min_f, unigram_f, freqBand):
         self.n = n
-        self.f = f
-        self.min_f = min_f
+        if min_f != 'auto':
+            self.min_f = min_f
+        else:
+            self.min_f = freqBand.min_f()
         self._f = Counter()
+        self.epochs = defaultdict(int)
         self.space = []
         self.lines = []
         self._grams = []
-        self.content = content
+        self.content = unigram_f
         self.lines_by_gram = defaultdict(set)
         self.blank = re.compile(' ')
     
@@ -24,9 +27,14 @@ class Parser:
         grams = self.grams(line)
         self.to_index(grams)
         self._grams.append(grams)
-        self._f.update(grams)
+        self.__add(grams)
         if flush_at:
             self.__flush(flush_at)
+
+    def __add(self, grams):
+        for gram in grams:
+            self._f[gram] += 1
+            self.epochs[gram] = len(self.space)
     
     def to_index(self, grams):
         for g in grams:
@@ -44,24 +52,12 @@ class Parser:
             if not (self.content[g[0]] and
                     self.content[g[-1]]):
                 continue
-#             parts = self.revert(g)
-#             if not (self.content[parts[0]] and
-#                     self.content[parts[-1]]):
-#                 continue
             gg.append(' '.join(g))
         return gg
-    
-#     def revert(self, g):
-#         _g = []
-#         for part in g:
-#             _g += part.split('_')
-#         return _g
     
     def rewrite(self):
         found = self.best()
         for freq, gram in found:
-            if freq < self.min_f:
-                continue
             indexes = self.lines_by_gram[gram]
             regex, repl = re.compile(gram), self.blank.sub('_', gram)
             for position in indexes:
@@ -76,7 +72,7 @@ class Parser:
     def best(self):
         return [
             (f, w) for w, f in self._f.most_common()
-            if f >= self.f
+            if f >= self.min_f
         ]
     
     def __flush(self, flush_at):
@@ -84,12 +80,14 @@ class Parser:
         if self.space and not len(self.space) % total:
             print 'Flushing at %d' % len(self.space)
             flushed = 0
-            ratio = len(self.space) / total
-            threshold = q * ratio
-            print len(self.space), total, q, ratio, threshold
-            for gram, freq in self._f.items():
-                if freq < threshold:
-                    flushed += 1
-                    del self._f[gram]
-                    del self.lines_by_gram[gram]
+            current_epoch = len(self.space)
+            for gram, epoch_created in self.epochs.items():
+                epochs_since = current_epoch - epoch_created
+                if epochs_since >= total:
+                    expectation = epochs_since / total
+                    if self._f[gram] < expectation:
+                        del self._f[gram]
+                        del self.lines_by_gram[gram]
+                        del self.epochs[gram]
+                        flushed += 1
             print 'Flushed %d n-grams' % flushed
