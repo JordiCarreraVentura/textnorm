@@ -14,5 +14,5 @@ class Streamer:
                     yield l.strip()
                 if self.c >= self.n:
                     break
-                if not self.c % 100000:
+                if not self.c % 1000:
                     print self.c, self.n
