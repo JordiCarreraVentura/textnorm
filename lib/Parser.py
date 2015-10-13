@@ -21,7 +21,7 @@ class Parser:
         self.content = unigram_f
         self.lines_by_gram = defaultdict(set)
         self.blank = re.compile(' ')
-    
+
     def __call__(self, line, flush_at=None, flush_over=None):
         self.space.append(line)
         grams = self.grams(line)
@@ -35,11 +35,11 @@ class Parser:
         for gram in grams:
             self._f[gram] += 1
             self.epochs[gram] = len(self.space)
-    
+
     def to_index(self, grams):
         for g in grams:
             self.lines_by_gram[g].add(len(self.space) - 1)
-    
+
     def grams(self, line):
         gg = []
         tokens = line.split()
@@ -54,7 +54,7 @@ class Parser:
                 continue
             gg.append(' '.join(g))
         return gg
-    
+
     def rewrite(self):
         found = self.best()
         for freq, gram in found:
@@ -64,17 +64,17 @@ class Parser:
                 received = self.space[position]
                 out = regex.sub(repl, received)
                 self.space[position] = out
-    
+
     def __iter__(self):
         for line in self.space:
             yield line
-    
+
     def best(self):
         return [
             (f, w) for w, f in self._f.most_common()
             if f >= self.min_f
         ]
-    
+
     def __flush(self, flush_at):
         q, total = flush_at
         if self.space and not len(self.space) % total:

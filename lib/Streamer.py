@@ -3,7 +3,7 @@ class Streamer:
         self.source = f
         self.n = n
         self.c = 0
-    
+
     def __iter__(self):
         with open(self.source, 'rb') as rd:
             for l in rd:

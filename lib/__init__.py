@@ -9,3 +9,5 @@ from tools import (
     clean_up,
     persist
 )
+
+from Smoothing import smooth

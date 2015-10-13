@@ -12,21 +12,22 @@ from lib import (
     apply,
     unigram_frequencies,
     clean_up,
-    persist
+    persist,
+    smooth
 )
 
 
 
 if __name__ == '__main__':
-    
+
     CORPUS = '/Users/jordi/Laboratorio/corpora/raw/blog2008.txt'
 #     CORPUS = '/Users/jordi/Laboratorio/corpora/raw/Kaggle Billion word imputation corpus/train_v2.txt'
 
-    CORPUS = '/Users/jordi/Laboratorio/WebInterpret/data/UK.ES.txt'
+#     CORPUS = '/Users/jordi/Laboratorio/WebInterpret/data/UK.ES.txt'
 #     CORPUS = './kaggle.tail.3000000.txt'
 #     CORPUS = './test.txt'
-    OUT = 'out.oct.2.txt'
-    TMP = 'work.oct.2.temp.dat'
+    OUT = 'out.oct.txt'
+    TMP = 'work.oct.temp.dat'
 
 #     CORPUS = '/Users/jordi/Laboratorio/Python/bin/webtext_downloader/meneame.corpus.es.txt'
 #     OUT = 'out.meneame.2.txt'
@@ -45,16 +46,12 @@ if __name__ == '__main__':
     WORK = CORPUS
     preprocessor = Preprocessor()
 
-    
-    print 'Starting preprocessing...'
-    unigram_f, freqBand = unigram_frequencies(preprocessor,
-                                              WORK, MAX_K,
-                                              MAX_F, N_DOCS)
 
-#     print freqBand.min_f()
-#     print freqBand.max_f()
-#     print freqBand.max_k()
-#     exit()
+    print 'Starting preprocessing...'
+    unigram_f, freqBand = unigram_frequencies(
+        preprocessor, WORK, MAX_F, N_DOCS
+    )
+
     while curr > 1:
 
         print 'ngrams of n=%d\nngrams of n=%d: parsing...\nngrams of n=%d: starting parser...' % (curr, curr, curr)
@@ -76,9 +73,11 @@ if __name__ == '__main__':
         WORK = persist(TMP, parser)
         print 'ngrams of n=%d: done!' % curr
         curr -= 1
-    
+
     print 'Applying annotation on original corpus...'
     restore(CORPUS, TMP, OUT)
+    print 'Applying linguistic smoothing around high frequency tokens...'
+    smooth(OUT)
     print 'Done!\nCleaning up...'
     clean_up(TMP)
     print 'Done!\nComplete.'

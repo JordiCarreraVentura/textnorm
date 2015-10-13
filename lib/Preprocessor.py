@@ -22,7 +22,7 @@ class Preprocessor:
         self.junk = re.compile('[^a-z ]', re.IGNORECASE)
         self.stop = re.compile('STOP')
         self.z = re.compile('Z')
-    
+
     def __call__(self, line):
         line = self.stop.sub('.', line)
         line = self.z.sub('1', line)
@@ -30,18 +30,18 @@ class Preprocessor:
             funct = self.implemented[method]
             line = funct(line)
         return line
-    
+
     def lowercase(self, line):
         return line.lower()
-    
+
     def num_norm(self, line):
         return self.num.sub('Z', line)
-    
+
     def punct(self, line):
         return self.punct.sub(' STOP ', line)
-    
+
     def blanks(self, line):
         return self.spaces.sub(' ', line)
-    
+
     def clean(self, line):
         return self.junk.sub(' ', line)
