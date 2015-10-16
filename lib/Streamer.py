@@ -12,7 +12,8 @@ class Streamer:
                     yield l.decode('utf-8').strip()
                 except Exception:
                     yield l.strip()
-                if self.c >= self.n:
+                if ((self.n and self.c >= self.n) or
+                self.n == 0):
                     break
-                if not self.c % 1000:
-                    print self.c, self.n
+#                 if not self.c % 1000:
+#                     print self.c, self.n
