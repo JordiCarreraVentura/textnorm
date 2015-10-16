@@ -6,9 +6,7 @@ This repository contains Textnorm (after "[text] [norm]alization"), a Python cla
 ##	Description and Examples
 A multiword expression is a sequence of words that show a significantly high statistical association and tend to appear together much more often than chance. Multiwords are a superset of compounds (*chicken soup*), idioms (*kick the bucket*), phrasal verbs (*come up with*), collocations (*extraordinary circumstances* versus *uncommon circumstances* -both combinations are largely semantically equivalent yet the first one is usually preferred-), standard multiword entities (*Barack Obama*, *Barack H. Obama*, *Obama*, *Mr. Barack Hussein Obama* and *President Obama* all behave like single units *despite* the white space).
 
-In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield *Barack* as a word with a certain frequency, and *Obama* as another word with a frequency very close to that of the former (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is rather a single token with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches which rely on the independence assumption, such as Naïve Bayes and Logistic Regression.
-
-2Do: VERIFY INDEPENDENCE ASSUMPTION FOR LOGISTIC REGRESSION
+In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield *Barack* as a word with a certain frequency, and *Obama* as another word with a frequency very close to that of the former (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is rather a single token with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches which rely on the independence assumption, such as Naïve Bayes.
 
 Put another way, the goal of this library is to minimize the discrepancy between claim i) *white spaces separate words* and ii) *white spaces separate distinct linguistic units*. In the standard written form of most languages, cases of claim ii) are only a subset of the cases of claim i) and the difference stands for errors in linguistic analysis.
 
@@ -16,7 +14,7 @@ Textnorm both detects the likely multiword candidates and maps the annotation on
 
 __Input__
 
-> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+> You want to drive a car--gotta have car insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the emergency room, you're a burden on the system.  Gotta change that.  The emergency room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the emergency room.
 
 __Output__
 
