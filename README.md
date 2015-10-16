@@ -73,16 +73,22 @@ flag | description | format | required/optional | default
 ### Samples
 
 > The only person exempted from that restriction is the American ambassador to Iraq, Ryan_Crocker, who can discuss Iraq-related issues with Iranian officials on a_regular_basis, according to a State_Department_official in Washington who spoke_on_condition_of_anonymity.Ambassador Khalilzad aroused the ire of Secretary_Rice who is reportedly upset that such a high ranking American official would participate in the same forum as the Iranian_foreign_minister. Mr. Khalilzad did not stray from American talking points at the forum. But Powerline is reporting that the moderator of the panel_discussion, the head_of_the_International Crisis Group Gareth Evans, insulted former UN_Ambassador John Bolton.
+
 ---
 > "Revolutionary_Armed_Forces_of_Colombia" and their mission of violence:"Founded in 1964, the FARC is a self-proclaimed communist and revolutionary guerrilla organization. They claim_to_represent the poor in their struggle against the country's wealthier classes, striving to seize power through armed revolution. These declarations notwithstanding, however, the group has largely abandoned its political agenda, and the FARC are now merely a drug_trafficking and terrorist group with complete_disregard for human_rights_and_international humanitarian law. Since the late 1980s, the Colombian government has repeatedly attempted to negotiate a solution and peace_settlement, without success. Directly_or_indirectly, all Colombians, including those of us here in Princeton, have been affected by their inhumane actions."My article from 2006 on the general topic can be accessed via this link.Ari J. Kaufman
+
 ---
 > On Super_Tuesday, 22 states and a couple territories with a combined 1,688 pledged_delegates will hold nominating_contests. From this point, quick math shows that after Super_Tuesday, only 1,428 pledged_delegates will still be available. Now, here is where the problem shows up. According to current_polling averages, the largest_possible victory for either candidate on Super_Tuesday will be Clinton 889 pledged_delegates, to 799 pledged_delegates for Obama. (In all likelihood, the winning margin will be lower than this, but using these numbers helps emphasize the seriousness_of_the_situation.)
 Power advised Obama on foreign policy, having spent her career detailing genocides and international responses to them, including a Pulitzer_Prize-winning book_on_the_subject.
+
 ---
 > A new video has Barack Obama speaking in 2007 about the burgeoning crisis in the financial_markets, but focusing on accounting_fraud rather than the_root_cause of the meltdown: the widespread issuance of bad credit, securitized by Fannie_Mae_and_Freddie_Mac at the behest of Congress.  In this audio_clip, Obama defends the idea of subprime_lending just over a year ago:
+
 ---
-> Iran has watched the drop_in_oil_prices with growing_alarm, the_International_Herald-Tribune reports, and it wants OPEC to take action to support prices at higher than $100 per_barrel. 
+> Iran has watched the drop_in_oil_prices with growing_alarm, the_International_Herald-Tribune reports, and it wants OPEC to take action to support prices at higher than $100 per_barrel.
+
 ---
 > The anger generated from that information has nothing to do with racism, and everything to do with the breach_of_trust between Congress and its constituents.  Frank, Chris_Dodd, and others like Lacy_Clay and Maxine_Waters tried the racist meme out on regulators who tried_to_warn Congress of the pending collapse.  They have to smear their critics.  They certainly can’t admit that Congress failed spectacularly.
+
 ---
 > With Congress grilling Wall_Street_executives over the_financial_collapse, why not have some of the real culprits testify in their investigations?  One of them is close at hand; in fact, he’s pretending to lead the investigation while really being one of its best targets.  Senator Chris_Dodd took massive_amounts in political contributions from Fannie_Mae, Freddie_Mac, and Countrywide, while securing sweetheart_deals from that same lender, all while supposedly providing the oversight that somehow missed the rotten struts under the entire subprime_market.  The_Wall_Street_Journal wonders why Dodd’s asking_questions rather than answering them:Dodd should get expelled first for his conflict_of_interest in accepting his sweetheart loans_from_Countrywide in the “Friends of Angelo” program. 
