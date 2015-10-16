@@ -13,12 +13,11 @@ Put another way, the goal of this library is to minimize the discrepancy between
 
 Textnorm both detects the likely multiword candidates and maps the annotation onto the original file, returning a copy of the input text with all multiwords marked as sequences of words now connected with underscores, as shown in the following example:
 
-<quote>
-### Input
-> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+__Input__
+	You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
 
-### Output
-> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+__Output__
+	You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
 
 More examples are provided at the bottom.
 
@@ -38,88 +37,29 @@ When invoking Textnorm in this way, the system will auto-configure its parameter
 
 ## Description of parameters and advanced settings
 
-
-#	Script arguments
-
-flag | description | format | required/optional | comments | default
---- | --- | --- | --- | --- | ---
--i | input file | string | required | Path of a file containing raw text to be used as input. | None
--o | output file | string | optional |Path of the file where the system's output should be stored. | Input file + ".textnorm.out.txt"
--t | temporal file | string | optional | Path of the file where the system's output should be stored. | "/tmp/textnorm.main.temp"
--n | order of grams | int | optional | Order 'n' of the [n]-grams to be used in the system's calculations. | 5
--maxk | k most frequent words | int or 'auto' | optional | Number 'k' of top most frequent words to be disregarded as high frequency noise by the system (intended to prevent phenomena such as function words [1] from interfering with the analysis)
---flush | gram flushing ratio | int:int | optional | Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed to be considered by the system. Any grams with a frequency lower than *x* times over *y* documents will be deleted when reaching *y* documents since they were added. These grams may still be added again later on. | 1:200000
---smooth | smoothing ratio | float or 'auto' | optional | Specifies a ratio 'r' (where 0 <= r <= 1.0) over the total frequency of any multiword that any adjacent function word [1] must be attached to the multiword. For example: "the" must not be added to most multiwords, but in cases such as "The Wall Street Journal", it is indeed part of the multiword. Since the ratio between the frequency of "Wall Street Journal" (as a multiword) and the frequency of "The" will be nearly 1.0 in many datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing. | 'auto'
+flag | description | format | required/optional | default
+--- | --- | --- | --- | ---
+-i | input file | string | required | None
+-o | output file | string | optional | Input file + ".textnorm.out.txt"
+-t | temporal file | string | optional | "/tmp/textnorm.main.temp"
+-n | order of grams [2] | int | optional | 5
+-maxk | k most frequent words [3] | int, float or 'auto' | optional
+--flush | gram flushing ratio [4] | int:int | optional | 1:200000
+--smooth | smoothing ratio [5] | float or 'auto' | optional | 'auto'
 --silent | Disables system messages on stdout | None | optional | NOTE: Not implemented yet. | false
 
+--ndocs
+--maxf
+--minf
 
---ndocs | 
-
-###	References
+###	Notes
 
 [1] https://en.wikipedia.org/wiki/Function_word
+[2] Order *n* of the [n]-grams to be used in the system's calculations.
+[3] Number *k* of top most frequent words to be disregarded as high frequency noise by the system. It is intended to prevent phenomena such as function words [1] from interfering with the analysis. If a floating point number is provided, the value for this parameter will be interpreted as a ratio over the total number of documents.
+[4] Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed to be considered by the system. Any grams with a frequency lower than *x* times over *y* documents will be deleted when reaching *y* documents since they were added. These grams may still be added again later on.
+[5] Specifies a ratio *r* (where 0 <= *r* <= 1.0) over the total frequency of any multiword that any adjacent function word [1] must be attached to the multiword. For example: *the* must not be added to most multiwords, but in cases such as *The Wall Street Journal*, it is indeed part of the multiword. Since the ratio between the frequency of *Wall Street Journal* (as a multiword) and the frequency of *The* will be nearly 1.0 in many datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing.
 
-
-
-        }
-        self.parsers = {
-            '-i': None,
-            '-o': None,
-            '-t': None,
-            '--maxk': self.integer,
-            '--flush': self.flush,
-            '-n': self.integer,
-            '--ndocs': self.integer,
-            '--maxf': self.floatint,
-            '--minf': self.integer,
-            '--smooth': self.autofloat
-
-
-
-
-        # -i            corpus
-        # -o            out, default out wrt corpus
-        # -t            tmp, default tmp wrt corpus
-        # --maxk        (max_k, max_f, min_f) or 'auto'
-        # --flush       flushing ratio, default (1, 200000)
-        # --silent      silent, default verbose
-        # -n            ngrams, default 10
-        # --ndocs       ndocs, default None
-
-
-
-
-CORPUS = File containing the input corpus
-OUT = File where the output will be stored
-TMP = Temporary file for storing the postprocessed data.
-
- 'work.temp.dat'
-
-#	Model parameters
-N = Maximum order of n-grams to be computed for multiword extraction. By the definition of multiwords, the minimum order is hard-coded to 2.
-
-F = Minimum frequency for a multiword
-Top F word n-grams most activated by their character n-grams that will be pooled for rewriting.
-
-MAX_K = 100
-
-MAX_F = float or int
-Maximum frequency for any unigram. Unigrams with a frequency equal or higher than this number will not be considered content words and will be omitted as multiword anchors. They can still appear inside multiwords, but they will not appear at either their beginning or end.
-If a float is provided (0 ≥ MAX_F ≥ 1.0), the final parameter will be calculated as the number of document lines in the input corpus times the initial floating point parameter.
-
-N_DOCS = 5000
-Maximum number of document lines to be streamed from the input file. This is useful in cases in which the input corpus is extremely large (in the current version, processing 5 million sentences requires 8GB of RAM).
-
-UPDATE: with flushing of infrequent n-grams, the memory footprint has decreased to: 
-
-
-
-=================
-HOWTO DOCSTRING
-
-"def add(x, y):
-    """Return the sum of x and y."""
-    return x + y
 
 
 ================= Textnorm class
@@ -127,8 +67,6 @@ HOWTO DOCSTRING
 ================= Move ArgumentParser out
 
 ================= Samples
-
-
 
 The only person exempted from that restriction is the American ambassador to Iraq, Ryan_Crocker, who can discuss Iraq-related issues with Iranian officials on a_regular_basis, according to a State_Department_official in Washington who spoke_on_condition_of_anonymity.Ambassador Khalilzad aroused the ire of Secretary_Rice who is reportedly upset that such a high ranking American official would participate in the same forum as the Iranian_foreign_minister. Mr. Khalilzad did not stray from American talking points at the forum. But Powerline is reporting that the moderator of the panel_discussion, the head_of_the_International Crisis Group Gareth Evans, insulted former UN_Ambassador John Bolton.
 
