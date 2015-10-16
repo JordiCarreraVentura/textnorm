@@ -32,7 +32,7 @@ More examples are provided at the bottom.
 
 The output is stored by default in a PATH/TO/INPUT/FILE".textnorm.out.txt". Alternatively, a different location for the output can be specified by using the flag "-o" during invocation as shown below:
 
-	python textnorm.py -i PATH/TO/INPUT/FILE -o PATH/TO/OUTPUTFILE
+	python textnorm.py -i PATH/TO/INPUT/FILE -o PATH/TO/OUTPUT/FILE
 
 When invoking Textnorm in this way, the system will auto-configure its parameters following a small set of statistical assumptions that usually hold for most natural language text across a variety of settings. During testing, the default parameters have provided (subjectively) good results with inputs as diverse as e-commerce titles and blog posts, although substantial fluctuations can be expected for varying sample sizes and different degrees of text naturalness.
 
@@ -45,10 +45,10 @@ flag | description | format | required/optional | default
 -o | output file | string | optional | Input file + ".textnorm.out.txt"
 -t | temporal file | string | optional | "/tmp/textnorm.main.temp"
 -n | order of grams [2] | int | optional | 5
--maxk | k most frequent words [3] | int, float or 'auto' | optional
+-maxk | k most frequent words [3] | int, float or 'auto' | optional | 'auto'
 --flush | gram flushing ratio [4] | int:int | optional | 1:200000
 --smooth | smoothing ratio [5] | float or 'auto' | optional | 'auto'
---silent | Disables system messages on stdout | None | optional | NOTE: Not implemented yet. | false
+--silent | disables messages on stdout [6] | None | optional | false
 
 --ndocs
 --maxf
@@ -57,10 +57,16 @@ flag | description | format | required/optional | default
 ###	Notes
 
 [1] https://en.wikipedia.org/wiki/Function_word
+
 [2] Order *n* of the [n]-grams to be used in the system's calculations.
+
 [3] Number *k* of top most frequent words to be disregarded as high frequency noise by the system. It is intended to prevent phenomena such as function words [1] from interfering with the analysis. If a floating point number is provided, the value for this parameter will be interpreted as a ratio over the total number of documents.
+
 [4] Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed to be considered by the system. Any grams with a frequency lower than *x* times over *y* documents will be deleted when reaching *y* documents since they were added. These grams may still be added again later on.
+
 [5] Specifies a ratio *r* (where 0 <= *r* <= 1.0) over the total frequency of any multiword that any adjacent function word [1] must be attached to the multiword. For example: *the* must not be added to most multiwords, but in cases such as *The Wall Street Journal*, it is indeed part of the multiword. Since the ratio between the frequency of *Wall Street Journal* (as a multiword) and the frequency of *The* will be nearly 1.0 in many datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing.
+
+[6] NOTE: Not implemented yet.
 
 
 
