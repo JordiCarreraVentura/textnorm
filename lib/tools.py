@@ -23,9 +23,9 @@ def is_word(string):
         return False
 
 
-def logdiv(n):
+def logdiv(n, base=4):
     if n > 1:
-        return n / math.log(n, 4)
+        return n / math.log(n, base)
     else:
         return -1
 
@@ -82,14 +82,16 @@ def unigram_frequencies(preprocessor, WORK, MAX_F, _n):
 
     freqDist = Counter()
     print 'Collecting unigram frequencies...'
+    ndocs = 0
     for line in Streamer(WORK, n=_n):
         freqDist.update(set(preprocessor(line).split()))
+        ndocs += 1
 
     freqBand = FrequencyBand(freqDist)
 
     print 'Determining frequency thresholds...'
     if isinstance(MAX_F, float):
-        maxfreq = int(_n * MAX_F)
+        maxfreq = int(ndocs * MAX_F)
     elif isinstance(MAX_F, int):
         maxfreq = MAX_F
     else:
