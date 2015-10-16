@@ -4,12 +4,12 @@
 This repository contains Textnorm (after "[text] [norm]alization"), a Python class for detecting multiword expressions over a large corpus of raw free text.
 
 ##	Description and Examples
-A multiword expression is a sequence of words that show a significantly high statistical association and tend to appear together much more often than chance. Multiwords are a superset of compounds ("chicken soup"), idioms ("kick the bucket"), phrasal verbs ("come up with"), collocations ("extraordinary circumstances" versus "uncommon circumstances" -both combinations are largely semantically equivalent yet the first one is usually preferred-), standard multiword entities ("Barack Obama", "Barack H. Obama", "Obama", "Mr. Barack Hussein Obama" and "President Obama" all behave like single units *despite* the white space).
+A multiword expression is a sequence of words that show a significantly high statistical association and tend to appear together much more often than chance. Multiwords are a superset of compounds (*chicken soup*), idioms (*kick the bucket*), phrasal verbs (*come up with*), collocations (*extraordinary circumstances* versus *uncommon circumstances* -both combinations are largely semantically equivalent yet the first one is usually preferred-), standard multiword entities (*Barack Obama*, *Barack H. Obama*, *Obama*, *Mr. Barack Hussein Obama* and *President Obama* all behave like single units *despite* the white space).
 
-In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield "Barack" as a word with a certain frequency, and "Obama" as another word with a frequency very close to that of the former (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is rather a single token with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches which rely on the independence assumption, such as Naïve Bayes and Logistic Regression.
+In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield *Barack* as a word with a certain frequency, and *Obama* as another word with a frequency very close to that of the former (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is rather a single token with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches which rely on the independence assumption, such as Naïve Bayes and Logistic Regression.
 -------VERIFY INDEPENDENCE ASSUMPTION FOR LOGISTIC REGRESSION
 
-Put another way, the goal of this library is to minimize the discrepancy between claim i) "white spaces separate words" and ii) "white spaces separate distinct linguistic units". In the standard written form of most languages, cases of claim ii) are only a subset of the cases of claim i) and the difference stands for errors in linguistic analysis.
+Put another way, the goal of this library is to minimize the discrepancy between claim i) *white spaces separate words* and ii) *white spaces separate distinct linguistic units*. In the standard written form of most languages, cases of claim ii) are only a subset of the cases of claim i) and the difference stands for errors in linguistic analysis.
 
 Textnorm both detects the likely multiword candidates and maps the annotation onto the original file, returning a copy of the input text with all multiwords marked as sequences of words now connected with underscores, as shown in the following example:
 
@@ -29,7 +29,7 @@ More examples are provided at the bottom.
 
 	python textnorm.py -i PATH/TO/INPUT/FILE
 
-The output is stored by default in a PATH/TO/INPUT/FILE".textnorm.txt". Alternatively, a different location for the output can be specified by using the flag "-o" during invocation as shown below:
+The output is stored by default in a PATH/TO/INPUT/FILE".textnorm.out.txt". Alternatively, a different location for the output can be specified by using the flag "-o" during invocation as shown below:
 
 	python textnorm.py -i PATH/TO/INPUT/FILE -o PATH/TO/OUTPUTFILE
 
@@ -41,21 +41,26 @@ When invoking Textnorm in this way, the system will auto-configure its parameter
 
 #	Script arguments
 
-flag | description | required/optional | comments | default
--i | Input file | string | required | Path of a file containing raw text to be used as input. | No default.
--o | Output file | string | optional |Path of the file where the system's output should be stored. | Defaults to the input file
--t | string | optional |Path of the file where the system's output should be stored. | Defaults to the input file
-            '-i': 'corpus',
-            '-o': 'out',
-            '-t': 'tmp',
-            '--maxk': 'maxk',
-            '--flush': 'flush',
-            '--silent': 'silent',
-            '-n': 'ngrams',
-            '--ndocs': 'ndocs',
-            '--maxf': 'maxf',
-            '--minf': 'minf',
-            '--smooth': 'smooth'
+flag | description | format | required/optional | comments | default
+--- | --- | --- | --- | --- | ---
+-i | input file | string | required | Path of a file containing raw text to be used as input. | None
+-o | output file | string | optional |Path of the file where the system's output should be stored. | Input file + ".textnorm.out.txt"
+-t | temporal file | string | optional | Path of the file where the system's output should be stored. | "/tmp/textnorm.main.temp"
+-n | order of grams | int | optional | Order 'n' of the [n]-grams to be used in the system's calculations. | 5
+-maxk | k most frequent words | int or 'auto' | optional | Number 'k' of top most frequent words to be disregarded as high frequency noise by the system (intended to prevent phenomena such as function words [1] from interfering with the analysis)
+--flush | gram flushing ratio | int:int | optional | Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed to be considered by the system. Any grams with a frequency lower than *x* times over *y* documents will be deleted when reaching *y* documents since they were added. These grams may still be added again later on. | 1:200000
+--smooth | smoothing ratio | float or 'auto' | optional | Specifies a ratio 'r' (where 0 <= r <= 1.0) over the total frequency of any multiword that any adjacent function word [1] must be attached to the multiword. For example: "the" must not be added to most multiwords, but in cases such as "The Wall Street Journal", it is indeed part of the multiword. Since the ratio between the frequency of "Wall Street Journal" (as a multiword) and the frequency of "The" will be nearly 1.0 in many datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing. | 'auto'
+--silent | Disables system messages on stdout | None | optional | NOTE: Not implemented yet. | false
+
+
+--ndocs | 
+
+###	References
+
+[1] https://en.wikipedia.org/wiki/Function_word
+
+
+
         }
         self.parsers = {
             '-i': None,
