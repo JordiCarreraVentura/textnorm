@@ -15,11 +15,11 @@ Textnorm both detects the likely multiword candidates and maps the annotation on
 
 __Input__
 
-	You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
 
 __Output__
 
-	You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
 
 More examples are provided at the bottom.
 
