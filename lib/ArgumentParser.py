@@ -16,7 +16,7 @@ HELP = 'No help available yet.'
 
 
 
-class ArgumentMapper:
+class ArgumentParser:
 
     def __init__(self, args):
         self.args = args
