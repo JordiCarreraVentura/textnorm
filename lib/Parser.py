@@ -7,12 +7,9 @@ from collections import (
 )
 
 class Parser:
-    def __init__(self, n, min_f, unigram_f, freqBand):
+    def __init__(self, n, min_f, unigram_f):
         self.n = n
-        if min_f != 'auto':
-            self.min_f = min_f
-        else:
-            self.min_f = freqBand.min_f()
+        self.min_f = min_f
         self._f = Counter()
         self.epochs = defaultdict(int)
         self.space = []
