@@ -22,7 +22,7 @@ from lib import (
 
 if __name__ == '__main__':
 
-    args = ArgumentMapper(sys.argv).parseargs()
+    args = ArgumentParser(sys.argv).parseargs()
 
     CORPUS = args['corpus']
     OUT = args['out']
