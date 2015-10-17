@@ -37,16 +37,16 @@ def unigram_frequencies(preprocessor, WORK, _n):
 
     freqDist = Counter()
     print 'Collecting unigram frequencies...'
-    ndocs = 0
     for line in Streamer(WORK, n=_n):
         freqDist.update(set(preprocessor(line).split()))
-        ndocs += 1
 
-    unigram_f = {
-        word: True for word in freqDist.keys()
-    }
-    for stopword in STOPWORDS:
-        unigram_f[stopword] = False
+    unigram_f = deft(bool)
+    
+    for word in freqDist.keys():
+        unigram_f[word] = True
+        
+    for word in STOPWORDS:
+        unigram_f[word] = False
 
     return unigram_f
 

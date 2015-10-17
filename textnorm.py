@@ -37,8 +37,6 @@ if __name__ == '__main__':
     WORK = CORPUS
     preprocessor = Preprocessor()
 
-#     print args
-#     exit()
     print 'Starting preprocessing...'
     unigram_f = unigram_frequencies(preprocessor, WORK, N_DOCS)
 

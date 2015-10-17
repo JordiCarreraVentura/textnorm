@@ -18,6 +18,7 @@ class Parser:
         self.content = unigram_f
         self.lines_by_gram = defaultdict(set)
         self.blank = re.compile(' ')
+        self.z = re.compile('Z+')
 
     def __call__(self, line, flush_at=None, flush_over=None):
         self.space.append(line)
@@ -56,11 +57,16 @@ class Parser:
         found = self.best()
         for freq, gram in found:
             indexes = self.lines_by_gram[gram]
-            regex, repl = re.compile(gram), self.blank.sub('_', gram)
+            regex = self.get_regex(gram)
+            repl = self.blank.sub('_', gram)
             for position in indexes:
                 received = self.space[position]
                 out = regex.sub(repl, received)
                 self.space[position] = out
+    
+    def get_regex(self, gram):
+        regex = self.z.sub('[0-9]+', gram)
+        return re.compile(regex)
 
     def __iter__(self):
         for line in self.space:
