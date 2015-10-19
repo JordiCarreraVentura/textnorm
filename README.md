@@ -44,7 +44,7 @@ Over the same data, and without default parameterization, Textnorm **returned** 
 	(b)	[(u'other', u'direction'), (u'smarter', u'than'), (u'most', u'productive'), (u'anyone', u'who'),
 		 (u'get', u'paid')]
 
-> Notice that _power between_ was extracted by Textnorm as one of the items in a longer sequence of several consecutive bigrams, up to the highest-order gram they all belong to ("transmission of power between generations").
+(**NOTE**: Observe that _power between_ was extracted by Textnorm as one of the items in a longer sequence of several consecutive bigrams, up to the highest-order gram they all belong to ("transmission of power between generations").
 
 Crucially, the expressions in (a) are provably legitimate multiword units (they all behave as unitary phrases from a distributional point of view) whereas some of those in (b) would generally be regarded as subunits of larger units, e.g., _smarter than **N**_, _anyone who **V**_ (with the only exception of *get paid*).
 
