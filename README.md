@@ -3,24 +3,34 @@
 ##	Summary
 This repository contains Textnorm (after "[text] [norm]alization"), a Python class for detecting multiword expressions over a large corpus of raw free text.
 
-##	Description and Examples
-A multiword expression is a sequence of words that show a significantly high statistical association and tend to appear together much more often than chance. Multiwords are a superset of compounds (*chicken soup*), idioms (*kick the bucket*), phrasal verbs (*come up with*), collocations (*extraordinary circumstances* versus *uncommon circumstances* -both combinations are largely semantically equivalent yet the first one is usually preferred-), and standard multiword entities (*Barack Obama*, *Barack H. Obama*, *Obama*, *Mr. Barack Hussein Obama* and *President Obama* all behave like single units __despite__ the white space).
+##	Description
+A multiword expression is a sequence of words that show a significantly high statistical association and tend to appear together much more often than chance. Multiwords are a superset of compounds (e.g. *chicken soup*), idioms (*kick the bucket*), phrasal verbs (*come up with*), collocations (*extraordinary circumstances* versus *uncommon circumstances* -both combinations are largely semantically equivalent yet the first one is usually preferred-), and standard multiword entities (*Barack Obama*, *Barack H. Obama*, *Obama*, *Mr. Barack Hussein Obama* and *President Obama* all behave like single units __despite__ the white space).
 
-In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield *Barack* as a word with a certain frequency, and *Obama* as another word with a frequency very close to that of the first word (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is, rather, a single token with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches relying on the independence assumption, such as Naïve Bayes.
+In many cases, word tokenization (naïvely performed by splitting at white spaces) results in linguistically incorrect statistics. As an example, when calculating the most frequent words in a text, naïve word tokenization will yield *Barack* as a word with a certain frequency and *Obama* as another word with a frequency very close to that of the first word (but not necessarily the same because their distribution pattern is not bi-univocal). What we want is, rather, a single token consisting of both words and with a single frequency count. Ultimately, this can have significant consequences for any statistical approaches relying on the independence assumption, such as Naïve Bayes.
 
-Put another way, the goal of this library is to minimize the discrepancy between claim i) *white spaces separate words* and ii) *white spaces separate distinct linguistic units*. In the standard written form of most languages, cases of claim ii) are only a subset of the cases of claim i) and the difference stands for errors in linguistic analysis.
+Put another way, the goal of this library is to minimize the discrepancy between the following two claims:
+i) *white spaces separate distinct distributionally distinct linguistic units* (our goal)
+ii) *white spaces separate graphical words* (default situation in many data pipelines)
+In the standard written form of most languages, cases of claim ii) are only a subset of the cases of claim i) and the difference stands for errors in linguistic analysis that translate into suboptimal statistical language models.
 
-Textnorm both detects the likely multiword candidates and maps the annotation onto the original file, returning a copy of the input text with all multiwords marked as sequences of words  connected with underscores. For illustration, consider the following example:
+Textnorm both detects the likely multiword candidates and maps them as annotation onto the original file, returning a copy of the input text with all multiwords marked as sequences of words  connected with underscores. Examples are provided at the bottom for illustration.
 
-__Input__
+### Performance
+#### Speed
+With respect to NLTK's built-in implementation of collocation extraction classes and methods [1], Textnorm is approximately as fast as over small datasets (~1Mb corpora). However, Textnorm returns in all cases the normalized input as well, which represents a significantly long part of the processing and one that NLTK does not deal with by default.
 
-> You want to drive a car--gotta have car insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the emergency room, you're a burden on the system.  Gotta change that.  The emergency room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the emergency room.
+On the other hand, Textnorm is significantly faster than NLTK over larger datasets (~36Mb corpora and above), about 7x:
+corpus | time to process (in seconds)
+ | NLTK | Textnorm
+1Mb Paul Graham's essays | 6 | 15
+36.6Mb Blog posts | 732 | 109
 
-__Output__
+#### Parameters
+Textnorm is designed to **not** require parameterization (although all parameters can still be modified at invocation time if necessary). Whereas e.g. NLTK returns a list of collocations, in a typical scenario the list is a ranked list (sorted by relevance) of all possible *n*-grams. This implies that further post-processing must then be applied on the list (sometimes involving non-trivial steps) in order to filter out irrelevant candidates. For instance, below is a list of top 490th-500th best collocations generated by NLTK:
 
-> You want to drive_a_car--gotta have car_insurance.  You want to live--gotta pay the bare bones insurance premium to live.  When you don't pay and you get sick and have to go to the_emergency_room, you're a burden on the system.  Gotta change that.  The_emergency_room is for people like my old neighbors--they loved setting off firecrackers and every once in a while they had to wrap someone's bloody hand in a t-shirt and take them to the_emergency_room.
+Over the same data, and without default parameterization, Textnorm *returned* the subset in (a) and did *not* return the subset in (b):
 
-More examples are provided at the bottom.
+
 
 
 ##	Usage
@@ -43,29 +53,30 @@ flag | description | format | required/optional | default
 -i | input file | string | required | None
 -o | output file | string | optional | Input file + ".textnorm.out.txt"
 -t | temporal file | string | optional | "/tmp/textnorm.main.temp"
--n | order of grams [2] | int | optional | 5
--maxk | k most frequent words [3] | int, float or 'auto' | optional | 'auto'
---flush | gram flushing ratio [4] | int:int | optional | 1:200000
---smooth | smoothing ratio [5] | float or 'auto' | optional | 'auto'
---silent | disables messages on stdout [6] | None | optional | false
+-n | order of grams [3] | int | optional | 5
+-maxk | k most frequent words [4] | int, float or 'auto' | optional | 'auto'
+--flush | gram flushing ratio [5] | int:int | optional | 1:200000
+--smooth | smoothing ratio [6] | float or 'auto' | optional | 'auto'
+--silent | disables messages on stdout [7] | None | optional | false
 
 --ndocs
 --maxf
 --minf
 
 ###	Notes
+[1] http://www.nltk.org/howto/collocations.html
 
-[1] https://en.wikipedia.org/wiki/Function_word
+[2] https://en.wikipedia.org/wiki/Function_word
 
-[2] Order *n* of the [n]-grams to be used in the system's calculations.
+[3] Order *n* of the [n]-grams to be used in the system's calculations.
 
-[3] Number *k* of top most frequent words to be disregarded as high frequency noise by the system. It is intended to prevent phenomena such as function words [1] from interfering with the analysis. If a floating point number is provided, the value for this parameter will be interpreted as a ratio over the total number of documents.
+[4] Number *k* of top most frequent words to be disregarded as high frequency noise by the system. It is intended to prevent phenomena such as function words [2] from interfering with the analysis. If a floating point number is provided, the value for this parameter will be interpreted as a ratio over the total number of documents.
 
-[4] Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed. Any gram with a frequency lower than *x* times over *y* documents will be deleted upon reaching *y* documents since the time when that gram was added. Any deleted gram may be added again later on.
+[5] Indicates a ratio x:y specifying the *x* minimum number of times any gram must appear for every *y* documents processed. Any gram with a frequency lower than *x* times over *y* documents will be deleted upon reaching *y* documents since the time when that gram was added. Any deleted gram may be added again later on.
 
-[5] Specifies a ratio *r* (where 0 <= *r* <= 1.0), computed over the total frequency of any multiword, at or above which any adjacent function word [1] will be attached to the multiword. For example: *the* should not be added to most multiwords but in cases such as *The Wall Street Journal*, it is actually part of the multiword. Since the ratio between the frequency of *The Wall Street Journal* (as a multiword) and the frequency of *Wall Street Journal* will be nearly 1.0 in most standard datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged with *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing.
+[6] Specifies a ratio *r* (where 0 <= *r* <= 1.0), computed over the total frequency of any multiword, at or above which any adjacent function word [2] will be attached to the multiword. For example: *the* should not be added to most multiwords but in cases such as *The Wall Street Journal*, it is actually part of the multiword. Since the ratio between the frequency of *The Wall Street Journal* (as a multiword) and the frequency of *Wall Street Journal* will be nearly 1.0 in most standard datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged with *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing.
 
-[6] NOTE: Not implemented yet.
+[7] NOTE: Not implemented yet.
 
 
 ### Samples
