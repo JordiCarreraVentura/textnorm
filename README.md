@@ -44,7 +44,7 @@ Over the same data, and without default parameterization, Textnorm **returned** 
 	(b)	[(u'other', u'direction'), (u'smarter', u'than'), (u'most', u'productive'), (u'anyone', u'who'),
 		 (u'get', u'paid')]
 
-(**NOTE**: Observe that _power between_ was extracted by Textnorm as one of the items in a longer sequence of several consecutive bigrams, up to the highest-order gram they all belong to ("transmission of power between generations").
+**NOTE**: Observe that _power between_ was extracted by Textnorm as one of the items in a longer sequence of several consecutive bigrams, up to the highest-order gram they all belong to (*transmission of power between generations*).
 
 Crucially, the expressions in (a) are provably legitimate multiword units (they all behave as unitary phrases from a distributional point of view) whereas some of those in (b) would generally be regarded as subunits of larger units, e.g., _smarter than **N**_, _anyone who **V**_ (with the only exception of *get paid*).
 
@@ -92,7 +92,7 @@ flag | description | format | required/optional | default
 
 [6] Specifies a ratio *r* (where 0 <= *r* <= 1.0), computed over the total frequency of any multiword, at or above which any adjacent function word [2] will be attached to the multiword. For example: *the* should not be added to most multiwords but in cases such as *The Wall Street Journal*, it is actually part of the multiword. Since the ratio between the frequency of *The Wall Street Journal* (as a multiword) and the frequency of *Wall Street Journal* will be nearly 1.0 in most standard datasets, a value equal to or lower than 1.0 for this parameter will result in *The* being merged with *Wall Street Journal*, yielding *The Wall Street Journal* as the final multiword. For problematic cases, a value of 1.1 will effectively deactivate this type of smoothing.
 
-[7] NOTE: Not implemented yet.
+[7] **NOTE**: Not implemented yet.
 
 
 ### Samples
